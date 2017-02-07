@@ -3,10 +3,11 @@ using System.Collections;
 using UnityEngine.UI;
  
 using System;
+using System.Linq;
 public class UiController : MonoBehaviour {
 
     [SerializeField]
-    GameObject lobbybt, myproductbt, lobby, myproduct,sendBt,feedBack,DeleteBT,sureBT,ShowError,fbBT,layoutPrefab,feedbackLobby;
+    GameObject lobbybt, myproductbt, lobby, myproduct,sendBt,feedBack,DeleteBT,sureBT,ShowError,fbBT,layoutPrefab,feedbackLobby,Loadingscene,ContactTel;
     GameObject[] imptexts;
     [SerializeField]
      Text[] Informations;
@@ -25,7 +26,8 @@ public class UiController : MonoBehaviour {
    
 	// Use this for initialization
 	void Start () {
-        StartCoroutine(Connection.GetInfo(feedbackLobby));
+        Loadingscene.SetActive(true);
+        StartCoroutine(Connection.GetInfo(feedbackLobby,Loadingscene));
         myproduct.SetActive(false);
         lobby.SetActive(true);
         StartCoroutine(lateStart());
@@ -75,10 +77,11 @@ public class UiController : MonoBehaviour {
             error = "A turma deve conter 4 Números";
         }
         else if (inputs[4].text.Length<5 )
-        {
-            if (inputs[4].text.Length>2&& inputs[4].text.Substring(2,1)!=".")
-            error ="O preço está incorreto use o modelo (RR.CC)";
-            else error = "O preço está incorreto use o modelo (RR.CC)";
+        {           
+            if (!inputs[4].text.Contains('.'))
+            {
+                  error ="O preço está incorreto use o modelo (RR.CC)";
+            }
         }
             
         if (control != 0)
@@ -151,6 +154,7 @@ public class UiController : MonoBehaviour {
     IEnumerator lateStart()
     {
         yield return new WaitForEndOfFrame();
+        AdManager.Instance.ShowBanner();
         if (PlayerPrefs.HasKey("MYID"))
         {
            inputs[0].text = PlayerPrefs.GetString("Produto");
@@ -235,7 +239,8 @@ public class UiController : MonoBehaviour {
     }
             void CallWpp(string number)
             {
-                Application.OpenURL("whatsapp://send/+55"+number+"#Intent;scheme=smsto;package=com.whatsapp;action=android.intent.action.SENDTO;end");
+                ContactTel.transform.Find("Text").GetComponent<Text>().text = number;
+                ContactTel.SetActive(true);                
             }
             void OpenFb(string fbID)
             {
@@ -244,7 +249,12 @@ public class UiController : MonoBehaviour {
             }
             public void getinf()
             {
-                StartCoroutine(Connection.GetInfo(feedbackLobby));
+                StartCoroutine(Connection.GetInfo(feedbackLobby,Loadingscene));
+            }
+            public void close()
+            {
+                ContactTel.SetActive(false);
+                ContactTel.transform.Find("Text").GetComponent<Text>().text = "";
             }
     }
   

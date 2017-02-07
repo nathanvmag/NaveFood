@@ -15,15 +15,14 @@ public class Connection : MonoBehaviour {
     {
         ID = PlayerPrefs.HasKey("MYID") ? PlayerPrefs.GetInt("MYID") : 0;
        
-       
-    }
+           }
         
 	
 	// Update is called once per frame
 	void Update () {
 	
 	}
-   static public IEnumerator GetInfo(GameObject feedback)
+   static public IEnumerator GetInfo(GameObject feedback,GameObject loading)
     {
         feedback.SetActive(true);
         feedback.transform.GetChild(0).GetComponent<Text>().text = "Atualizando...";
@@ -34,7 +33,7 @@ public class Connection : MonoBehaviour {
         foreach (Transform t in Camera.main.GetComponent<UiController>().layoutGroup.transform)
         {
             Destroy(t.gameObject);
-            Debug.Log("hey");
+
         }
         string[,] infs = new string [ www.text.Split(';').Length - 1, www.text.Split(';')[2].Split('|').Length ];
         for (int i=0;i<infs.GetLength(0);i++)
@@ -50,6 +49,7 @@ public class Connection : MonoBehaviour {
           feedback.transform.GetChild(0).GetComponent<Text>().text = "Suscesso";
           yield return new WaitForSeconds(0.8f);
           feedback.SetActive(false);
+          loading.SetActive(false);
       }
       else
       {
