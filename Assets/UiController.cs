@@ -72,16 +72,30 @@ public class UiController : MonoBehaviour {
         {
             error = "Número de celular incorreto, use (dd+num)";
         }
-        else if (inputs[3].text.Length<4)
+        else if (inputs[3].text.Length<=4)
         {
+            if (inputs[3].text.Length == 4)
+            {
+                int a = int.Parse((inputs[3].text[0].ToString()));
+                int b = int.Parse((inputs[3].text[1].ToString()));
+                int c = int.Parse((inputs[3].text[2].ToString()));
+                int d = int.Parse((inputs[3].text[3].ToString()));
+
+                if ((a == 1 || a == 2 || a == 3) && (b == 0) && (c == 0) && (d == 1 || d == 2 || d == 3 || d == 4))
+                {
+                    if (inputs[4].text.Length <= 5 && !inputs[4].text.Contains('.'))
+                    {
+                        error = "O preço está incorreto use o modelo (RR.CC)";
+                    }
+                }
+                else error = "Insira uma turma valida";
+            }
+            else 
             error = "A turma deve conter 4 Números";
         }
-        else if (inputs[4].text.Length<5 )
-        {           
-            if (!inputs[4].text.Contains('.'))
-            {
-                  error ="O preço está incorreto use o modelo (RR.CC)";
-            }
+        else if (inputs[4].text.Length <= 5  && !inputs[4].text.Contains('.'))
+        {                    
+                  error ="O preço está incorreto use o modelo (RR.CC)";            
         }
             
         if (control != 0)
@@ -100,11 +114,19 @@ public class UiController : MonoBehaviour {
     {
         myproduct.SetActive(false);
         lobby.SetActive(true);
+        if (UnityEngine.Random.Range(0, 4) == 0)
+        {
+            AdManager.Instance.ShowVideo();
+        }
     }
     public void myprodBt()
     {
         myproduct.SetActive(true);
         lobby.SetActive(false);
+        if (UnityEngine.Random.Range(0, 4) == 0)
+        {
+            AdManager.Instance.ShowVideo();
+        }
     }
     public void SendBT()
     {
@@ -131,10 +153,15 @@ public class UiController : MonoBehaviour {
                 ShowError.SetActive(true);
                 ShowError.transform.FindChild("Text").GetComponent<Text>().text = error;
             }
+         
         }
         catch (Exception e )
         {
             Camera.main.GetComponent<NativeToolkitExample>().OnShowAlertPress(e.Message);
+        }
+        if (UnityEngine.Random.Range(0, 4) == 0)
+        {
+            AdManager.Instance.ShowVideo();
         }
     }
     public void LoadTx(string path)
@@ -154,7 +181,7 @@ public class UiController : MonoBehaviour {
     IEnumerator lateStart()
     {
         yield return new WaitForEndOfFrame();
-        AdManager.Instance.ShowBanner();
+        StartCoroutine(video());
         if (PlayerPrefs.HasKey("MYID"))
         {
            inputs[0].text = PlayerPrefs.GetString("Produto");
@@ -175,6 +202,10 @@ public class UiController : MonoBehaviour {
      public void DeleteBTpress()
     {
         sureBT.SetActive(true);
+        if (UnityEngine.Random.Range(0, 4) == 0)
+        {
+            AdManager.Instance.ShowVideo();
+        }
     }
     public void DeleteYes()
      {
@@ -201,7 +232,7 @@ public class UiController : MonoBehaviour {
     {
       
         GameObject[] gameobjects = new GameObject[infs.GetLength(0)];
-        Debug.Log("aqui");
+
         for( int i =0;i<infs.GetLength(0);i++)
         {
             gameobjects[i]= Instantiate(layoutPrefab)as GameObject;
@@ -255,6 +286,20 @@ public class UiController : MonoBehaviour {
             {
                 ContactTel.SetActive(false);
                 ContactTel.transform.Find("Text").GetComponent<Text>().text = "";
+            }
+    IEnumerator video()
+            {
+              while(true)
+              {
+                  yield return new WaitForSeconds(50);
+                  if (lobby.activeSelf)
+                  {
+                      if (UnityEngine.Random.Range(0, 4) == 0)
+                      {
+                          AdManager.Instance.ShowVideo();
+                      }
+                  }
+              }
             }
     }
   

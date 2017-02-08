@@ -21,8 +21,8 @@ public class AdManager : MonoBehaviour {
 	}
     public void ShowBanner()
     {
-        Debug.Log("addd");
-        Admob.Instance().showBannerRelative(AdSize.Banner, AdPosition.TOP_CENTER, 5, "BannerAd");
+
+        Admob.Instance().showBannerRelative(AdSize.SmartBanner, AdPosition.TOP_CENTER, 5, "BannerAd");
     }
     public void ShowVideo()
     {

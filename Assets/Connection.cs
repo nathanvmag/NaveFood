@@ -24,42 +24,63 @@ public class Connection : MonoBehaviour {
 	}
    static public IEnumerator GetInfo(GameObject feedback,GameObject loading)
     {
+        bool test = false;
         feedback.SetActive(true);
         feedback.transform.GetChild(0).GetComponent<Text>().text = "Atualizando...";
         WWWForm fm = new WWWForm();
         fm.AddField("servID", 920);
         WWW www = new WWW("http://navefood.pe.hu/Services.php", fm);
         yield return www;
+        AdManager.Instance.ShowBanner();
+        Debug.Log(www.text);
         foreach (Transform t in Camera.main.GetComponent<UiController>().layoutGroup.transform)
         {
             Destroy(t.gameObject);
 
         }
-        string[,] infs = new string [ www.text.Split(';').Length - 1, www.text.Split(';')[2].Split('|').Length ];
-        for (int i=0;i<infs.GetLength(0);i++)
+        try
         {
-            for (int j = 0;j<infs.GetLength(1);j++)
+            string[,] infs = new string[www.text.Split(';').Length - 1, www.text.Split(';')[0].Split('|').Length];
+            for (int i = 0; i < infs.GetLength(0); i++)
             {
-                infs[i, j] = www.text.Split(';')[i].Split('|')[j];
+                for (int j = 0; j < infs.GetLength(1); j++)
+                {
+                    infs[i, j] = www.text.Split(';')[i].Split('|')[j];
+                }
             }
+            Debug.Log(infs.GetLength(0) + " " + infs.GetLength(1));
+            if (infs.GetLength(1)==8)
+            {
+                Camera.main.GetComponent<UiController>().CreateLobby(infs);
+                feedback.transform.GetChild(0).GetComponent<Text>().text = "Suscesso";
+                yield return new WaitForSeconds(0.8f);
+                feedback.SetActive(false);
+                loading.SetActive(false);
+            }
+            else
+            {
+                feedback.transform.GetChild(0).GetComponent<Text>().text = "Falha";
+                yield return new WaitForSeconds(0.8f);
+                feedback.SetActive(false);
+                yield return new WaitForSeconds(25);
+                Camera.main.GetComponent<UiController>().getinf();
+
+            }
+            test = true;
         }
-      if (infs[0,3] != null)
-      {
-          Camera.main.GetComponent<UiController>().CreateLobby(infs);
-          feedback.transform.GetChild(0).GetComponent<Text>().text = "Suscesso";
-          yield return new WaitForSeconds(0.8f);
-          feedback.SetActive(false);
-          loading.SetActive(false);
-      }
-      else
-      {
-          feedback.transform.GetChild(0).GetComponent<Text>().text = "Falha";
-          yield return new WaitForSeconds(0.8f);
-          feedback.SetActive(false);
-          yield return new WaitForSeconds(25);
-          Camera.main.GetComponent<UiController>().getinf();        
-          
-      }
+       finally
+        { };
+
+       if (test)
+       {
+           feedback.transform.GetChild(0).GetComponent<Text>().text = "Falha";
+           yield return new WaitForSeconds(0.8f);
+           feedback.SetActive(false);
+           yield return new WaitForSeconds(25);
+           Camera.main.GetComponent<UiController>().getinf();
+           
+       }
+       
      
    }
       
