@@ -61,7 +61,8 @@ public class fblogin : MonoBehaviour
             var aToken = Facebook.Unity.AccessToken.CurrentAccessToken;
             // Print current access token's User ID
             Debug.Log(aToken.UserId);
-            UiController.facebookID = aToken.UserId;
+            Manager.facebookID = aToken.UserId;
+            PlayerPrefs.SetString("fbID", aToken.UserId);
             // Print current access token's granted permissions
             foreach (string perm in aToken.Permissions)
             {

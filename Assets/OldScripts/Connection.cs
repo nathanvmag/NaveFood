@@ -185,19 +185,21 @@ public class Connection : MonoBehaviour {
    }
     public static string ConvertBase64(Texture2D tex)
     {
-        if (tex.height * tex.width > 262144)
+        if (tex.height * tex.width > 65536)
         {
-            TextureScale.Bilinear(tex, 512, 512);
+            TextureScale.Bilinear(tex, 256, 256);
         }
-        try { string s = Convert.ToBase64String(tex.EncodeToPNG());
-        return s;
+        try
+        {
+            string s = Convert.ToBase64String(tex.EncodeToPNG());
+            return s;
         }
         catch (Exception e)
         {
             Camera.main.GetComponent<NativeToolkitExample>().OnShowAlertPress(e.Message);
             return null;
         }
-        
+
     }
    
     

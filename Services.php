@@ -74,6 +74,98 @@
             else echo "erro";
         
         }
+        // NOVOS SERVIÇOS 
+         else if ($servID ==31)
+        {
+        
+             if (isset($_POST['login']) && isset($_POST['senha'])){
+             $login = $_POST['login'];
+             $senha= $_POST['senha'];
+              $senha = md5($senha);
+             $query = "INSERT INTO `UserLogin`( `Login`, `Senha`) VALUES ('$login','$senha')";
+	        $result = $connect->query($query);
+            echo "ok";
+            }
+            else echo "error";
+            
+        }
+         else if ($servID ==49)
+        {
+        
+             if (isset($_POST['login']) ){
+             $login = $_POST['login'];             
+             $query = "SELECT `Login` as 'login' FROM `UserLogin` WHERE `Login`='$login' ";
+	         $result = $connect->query($query);
+
+             if ($result->num_rows > 0) {
+	        while ($row = $result->fetch_assoc()) {
+                echo "error";
+               }
+            }
+             else echo "Ok";
+              
+        }
+           else  echo "error";
+}
+
+        
+           else if ($servID ==37)
+        {
+        
+             if (isset($_POST['login']) && isset($_POST['senha'])){
+             $login = $_POST['login'];
+             $senha= $_POST['senha'];
+             $senha = md5($senha);
+             $query = "SELECT `Login` as 'login', `Senha`as 'pass'  FROM `UserLogin` WHERE `Login`='$login' and `Senha`='$senha'";
+	         $result = $connect->query($query);
+
+             if ($result->num_rows > 0) {
+	        while ($row = $result->fetch_assoc()) {
+                echo "Ok";
+               }
+            }
+             else echo "errorsemresult";
+              
+        }
+           else  echo "error";
+       }
+       else if ($servID ==65)
+        {
+         if (isset($_POST['login']) ){
+             $login = $_POST['login'];      
+            $query = "SELECT  `Nome`as 'name', `foto`as 'foto', `Turma`as 'turma', `cel` as 'cel',`fbID`  as 'fb' FROM `UserLogin` WHERE `Login`= '$login'";
+	        $result = $connect->query($query);
+
+	        if ($result->num_rows > 0) {
+	        while ($row = $result->fetch_assoc()) {
+                echo $row["name"]. "|". $row["turma"]. "|". $row["cel"]. "|". $row["foto"]."|".$row["fb"] ;
+               }
+	                                     }
+	        else echo "sem resultados /n";
+         }
+         else echo "error";
+         }
+         else if ($servID=92)
+         {
+             if (isset($_POST['login'])&&isset($_POST['nome'])&&isset($_POST['foto'])&&isset($_POST['turma'])&&isset($_POST['cel'])&&isset($_POST['fbid']) ){
+             $login = $_POST['login'];      
+             $nome= $_POST['nome'];
+             $foto= $_POST['foto'];
+             $turma=$_POST['turma'];
+             $cel=$_POST['cel'];
+             $fbid=$_POST['fbid'];
+            $query = "UPDATE `UserLogin` SET `Nome`='$nome',`foto`='$foto',`Turma`='$turma',`cel`='$cel',`fbID`='$fbid' WHERE `Login`= '$login'";
+	        $result = $connect->query($query);
+            echo "OK";
+            }
+            else echo "error";
+
+            }
+           
+       
+    
+//TERMINA AQUI
+
         else if ($servID ==920)
         {
             $query = "SELECT  `Image` as 'img', `Produto`as 'prod', `Vendedor`as 'vend', `Whatsapp`as 'wpp', `Turma`as 'turma', `Preco`as 'preco', `fbID` as 'fbid', `Dispo`as 'disp'  FROM `NaveFood` WHERE 1";
